@@ -1,134 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BLERP Whitelist Checker</title>
-  <link rel="icon" type="image/x-icon" href="favicon.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Collection</title>
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
-      height: 100%;
-      font-family: 'Orbitron', sans-serif;
-      color: #fff;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
     }
 
     body {
-      background: url('background.jpg') no-repeat center center fixed;
-      background-size: cover;
+      display: flex;
+      min-height: 100vh;
+      background: #f6f6f0;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 220px;
+      background: #d7d7c9;
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar h2 {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .sidebar nav a {
+      display: block;
+      text-decoration: none;
+      color: #000;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    .sidebar nav a:hover {
+      font-weight: bold;
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
-      position: relative;
     }
 
-    body::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background-color: rgba(0, 0, 0, 0.6);
-      z-index: 0;
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 40px;
+      gap: 15px;
     }
 
-    .container {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 20px;
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 40px;
     }
 
-    h1 {
-      font-size: 2rem;
+    .hero-text {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .hero-text h1 {
+      font-size: 36px;
       margin-bottom: 15px;
     }
 
-    input {
-      padding: 15px;
-      border: none;
-      border-radius: 10px;
-      width: 300px;
-      text-align: center;
-      font-size: 1rem;
-      margin-bottom: 15px;
+    .hero-text p {
+      margin-bottom: 20px;
+      line-height: 1.5;
+      color: #444;
     }
 
-    button {
-      padding: 12px 25px;
-      border: none;
-      border-radius: 10px;
-      background: #ffcc00;
-      font-weight: bold;
-      font-size: 1rem;
+    .hero-text button {
+      padding: 12px 24px;
+      border: 2px solid #000;
+      background: transparent;
+      font-size: 16px;
       cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
     }
 
-    #result {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.1rem;
+    .hero-text button:hover {
+      background: #000;
+      color: #fff;
     }
 
-    .success { color: #00ff99; }
-    .fail { color: #ff4444; }
+    .hero img {
+      flex: 1;
+      max-width: 400px;
+      border-radius: 10px;
+    }
 
-    .footer {
-      position: absolute;
-      bottom: 20px;
-      font-size: 0.8rem;
-      color: #ccc;
-      z-index: 1;
+    /* Mobile adjustments */
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+      .sidebar nav {
+        display: flex;
+        gap: 15px;
+      }
+
+      .main {
+        padding: 20px;
+      }
+
+      .hero {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero img {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>BLERP wl checkerp</h1>
-    <input type="text" id="walletInput" placeholder="input your solana addy" />
-    <br />
-    <button onclick="checkWhitelist()">Check</button>
-    <div id="result"></div>
-  </div>
-  <div class="footer">© 2025 BLERP. Built from the trenches.</div>
-  <p style="margin-top: 20px;">
-  Follow us on X: <a href="https://x.com/blerpszn?s=21" target="_blank" rel="noopener noreferrer" style="color:#ffcc00; font-weight:bold;">@blerpszn</a>
-</p>
-  
-  <script>
-    const whitelist = [
-      "8FfGyQcBsd1NpMkZfGM6kSzh4ZYNLtU9esSkkHtcdNDG",
-      "6mnp8Cu32JiiPajZHJ5B7f5v3jaunsNJK7RkND6u5opb",
-      "3zVp1wj2DiMSdPX2rkJ7mixhPYtZ4CEfEwB8iEC2ZFzup",
-      "13My7TZBTLU88tpBTSbaKqXEdysUFVguqEAbc4eM5kP9",
-      "E79UEYGPm3Uzw4HYdNh9JVgMzV7kzz9NTAVvVJQ8MyVG",
-      "3kWfDnhkRv1TvSQFXEVFZzdNbJaJ7Ch3RGQ69XMRQLUb",
-      "AnPg25HKnWXfVjFP7DVYCVjqZpwxwjbanDqU45LuDpuG",
-      "9xDsMgaBCGDM5bhv3U9ktcEPdnZL5BfXNFzohUkSZMZZ",
-      "442K5wX3cdR8wCGkq5rsupTYLZpJEmE7YYPkpfGArMYC",
-    ];
-    function checkWhitelist() {
-      const input = document.getElementById('walletInput').value.trim().toLowerCase();
-      const result = document.getElementById('result');
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <h2>YOUR LOGO</h2>
+      <nav>
+        <a href="#">Collection</a>
+        <a href="#">New Brand</a>
+        <a href="#">Popular</a>
+        <a href="#">Sale</a>
+        <hr>
+        <a href="#">Man</a>
+        <a href="#">Woman</a>
+        <a href="#">Kids</a>
+        <a href="#">Other</a>
+      </nav>
+    </div>
+    <div>
+      <p>⚙️</p>
+    </div>
+  </aside>
 
-      if (!input) {
-        result.textContent = "⚠️ Enter a wallet address.";
-        result.className = "fail";
-        return;
-      }
+  <!-- Main content -->
+  <section class="main">
+    <div class="topbar">
+      <span>🔍</span>
+      <span>🛒</span>
+      <span>👤</span>
+    </div>
 
-      if (whitelist.map(a => a.toLowerCase()).includes(input)) {
-        result.textContent = "✅ you are eligible";
-        result.className = "success";
-      } else {
-        result.textContent = "❌ not eligible.";
-        result.className = "fail";
-      }
-    }
-  </script>
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Super Brand Collection</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse id nisl tortor. 
+          Nunc ultricies, urna quis blandit feugiat, purus massa.</p>
+        <button>SHOP</button>
+      </div>
+      <img src="https://via.placeholder.com/400x500" alt="Fashion Model">
+    </div>
+  </section>
 </body>
 </html>
