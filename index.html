@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brand Collection</title>
+  <title>Super Brand Collection</title>
   <style>
     * {
       margin: 0;
@@ -28,9 +28,13 @@
       justify-content: space-between;
     }
 
-    .sidebar h2 {
-      font-size: 18px;
+    .logo {
+      font-weight: bold;
       margin-bottom: 30px;
+    }
+
+    .sidebar nav {
+      flex: 1;
     }
 
     .sidebar nav a {
@@ -38,7 +42,7 @@
       text-decoration: none;
       color: #000;
       font-size: 16px;
-      margin: 10px 0;
+      margin: 12px 0;
     }
 
     .sidebar nav a:hover {
@@ -48,24 +52,25 @@
     /* Main content */
     .main {
       flex: 1;
-      padding: 40px;
+      padding: 30px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
     }
 
     .topbar {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 40px;
+      margin-bottom: 30px;
       gap: 15px;
+      font-size: 20px;
     }
 
     .hero {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: 40px;
+      justify-content: space-between;
+      gap: 30px;
+      flex-wrap: wrap;
     }
 
     .hero-text {
@@ -74,7 +79,7 @@
     }
 
     .hero-text h1 {
-      font-size: 36px;
+      font-size: 34px;
       margin-bottom: 15px;
     }
 
@@ -85,12 +90,12 @@
     }
 
     .hero-text button {
-      padding: 12px 24px;
+      padding: 12px 28px;
       border: 2px solid #000;
       background: transparent;
       font-size: 16px;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 6px;
       transition: all 0.3s ease;
     }
 
@@ -102,7 +107,8 @@
     .hero img {
       flex: 1;
       max-width: 400px;
-      border-radius: 10px;
+      border-radius: 8px;
+      object-fit: cover;
     }
 
     /* Mobile adjustments */
@@ -114,13 +120,20 @@
       .sidebar {
         width: 100%;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
+        padding: 10px 20px;
       }
 
       .sidebar nav {
         display: flex;
+        flex-wrap: wrap;
         gap: 15px;
+      }
+
+      .sidebar nav a {
+        margin: 0;
+        font-size: 14px;
       }
 
       .main {
@@ -132,6 +145,10 @@
         text-align: center;
       }
 
+      .hero-text h1 {
+        font-size: 26px;
+      }
+
       .hero img {
         max-width: 100%;
       }
@@ -141,23 +158,18 @@
 <body>
   <!-- Sidebar -->
   <aside class="sidebar">
-    <div>
-      <h2>YOUR LOGO</h2>
-      <nav>
-        <a href="#">Collection</a>
-        <a href="#">New Brand</a>
-        <a href="#">Popular</a>
-        <a href="#">Sale</a>
-        <hr>
-        <a href="#">Man</a>
-        <a href="#">Woman</a>
-        <a href="#">Kids</a>
-        <a href="#">Other</a>
-      </nav>
-    </div>
-    <div>
-      <p>⚙️</p>
-    </div>
+    <div class="logo">YOUR LOGO</div>
+    <nav>
+      <a href="#">Collection</a>
+      <a href="#">New Brand</a>
+      <a href="#">Popular</a>
+      <a href="#">Sale</a>
+      <hr>
+      <a href="#">Man</a>
+      <a href="#">Woman</a>
+      <a href="#">Kids</a>
+      <a href="#">Other</a>
+    </nav>
   </aside>
 
   <!-- Main content -->
