@@ -1,0 +1,271 @@
+/* style.css - Cleaned, working Miden theme */
+
+:root {
+    --bg-dark: #050505;
+    --bg-card: #0a0a0a;
+    --neon-orange: #FF5E00; 
+    --neon-blue: #00f3ff;
+    --text-main: #ffffff;
+    --text-dim: #888888;
+    --font-header: 'Orbitron', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 50% 50%, #1a0a00 0%, #050505 100%);
+    color: var(--text-main);
+    font-family: var(--font-mono);
+    
+    display: flex;
+    justify-content: center; /* Centers items horizontally */
+    align-items: center;    /* <-- CRITICAL FIX: Centers items vertically */
+    
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    width: 100%;
+}
+
+#app-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto; /* Ensures centering within the body's flow */
+    text-align: center;
+}
+
+/* --- STAGE MANAGEMENT --- */
+.stage-container {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- TYPOGRAPHY & INPUTS --- */
+h1 {
+    font-family: var(--font-header);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+}
+
+.logo-area .miden-logo {
+    font-family: var(--font-header);
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--neon-orange);
+    text-shadow: 0 0 15px var(--neon-orange);
+    display: block;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    background: #000;
+    border: 1px solid #333;
+    border-radius: 4px;
+    color: var(--neon-orange);
+    font-family: var(--font-mono);
+    font-size: 1.1rem;
+    text-align: center;
+    outline: none;
+    transition: 0.3s;
+}
+
+/* --- BUTTONS & ACTIONS --- */
+.primary-btn, .download-btn {
+    width: 100%;
+    padding: 15px;
+    background: var(--neon-orange);
+    color: #000;
+    font-family: var(--font-header);
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Cleaned clip-path for button shape */
+    -webkit-clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.share-btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #000;
+    border: 1px solid var(--text-main);
+    color: var(--text-main);
+    font-family: var(--font-header);
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-align: center;
+    -webkit-clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+/* --- THE CARD (CORE LAYOUT FIX) --- */
+.card-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.card-frame {
+    width: 320px;
+    height: 500px;
+    background: var(--bg-card);
+    border: 2px solid #333;
+    /* CRITICAL FIX: Base for absolute footer */
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.miden-icon {
+    font-weight: 900;
+    color: var(--text-main);
+}
+
+.card-art {
+    width: 100%;
+    height: 180px;
+    background: #000;
+    border: 1px solid #333;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    /* Removed flex centering for the PFP image, as we want it to fill */
+}
+
+/* Profile Picture Styling */
+.pfp-placeholder {
+    width: 100%; 
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 3px solid var(--neon-orange);
+    box-shadow: 0 0 15px rgba(255, 94, 0, 0.5);
+    background-color: #222;
+    animation: pulseBorder 2s infinite alternate;
+}
+
+@keyframes pulseBorder {
+    from { box-shadow: 0 0 5px rgba(255, 94, 0, 0.3); }
+    to { box-shadow: 0 0 20px rgba(255, 94, 0, 0.8); }
+}
+
+.card-body {
+    width: 100%;
+    text-align: left;
+    flex-grow: 1; /* Allows body to push footer down */
+}
+
+.contributor-handle {
+    font-family: var(--font-header);
+    font-size: 1.4rem;
+    color: #fff;
+    margin: 0 0 15px 0;
+    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.stat-box {
+    background: #111;
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: center;
+}
+
+.stat-label {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+}
+
+/* Card Footer (Absolute Positioning) */
+.card-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px;
+    text-align: center;
+    background: linear-gradient(90deg, transparent, rgba(255, 94, 0, 0.2), transparent);
+}
+
+.rarity-title {
+    font-family: var(--font-header);
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* RARITY COLORS */
+.rarity-MYTHIC { color: #FFD700; text-shadow: 0 0 10px #FFD700; border-color: #FFD700; }
+.rarity-ELITE { color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange); border-color: var(--neon-orange); }
+.rarity-PRIME { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); border-color: var(--neon-blue); }
+/* --- NEW RARITY TIERS (51-100) --- */
+.rarity-MASTER { color: #f0f8ff; text-shadow: 0 0 10px #f0f8ff; border-color: #f0f8ff; }         /* ALICE BLUE */
+.rarity-EXPERT { color: #FFD700; text-shadow: 0 0 10px #FFD700; border-color: #FFD700; }         /* Use Gold for emphasis */
+.rarity-VETERAN { color: #008080; text-shadow: 0 0 10px #008080; border-color: #008080; }       /* TEAL */
+.rarity-JOURNEYMAN { color: #FFA500; text-shadow: 0 0 10px #FFA500; border-color: #FFA500; }    /* ORANGE */
+.rarity-JOURNEYMAN { color: #008080; text-shadow: 0 0 10px #008080; border-color: #008080; }    /* TEAL */
+/* --------------------------------- */
+.rarity-CONTROLLER { color: #fff; border-color: #fff; }
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 600px) {
+    .card-frame {
+        width: 100%; 
+        max-width: 300px; 
+    }
+}

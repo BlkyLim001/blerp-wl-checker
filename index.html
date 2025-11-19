@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miden ZK Prover Card | Kaito Leaderboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.png.ico">
+</head>
+<body>
+
+    <div id="app-container">
+        
+        <div id="stage-input" class="stage-container">
+            <div class="logo-area">
+                <span class="miden-logo">M</span>
+            </div>
+            <h1>MIDEN CARD CLAIM</h1>
+            <p class="subtitle">Enter your X handle to claim your card.</p>
+            
+            <div class="input-group">
+                <input type="text" id="handle-input" placeholder="YourHandle" maxlength="20">
+                <button onclick="checkAvailability()" class="primary-btn">CHECK ELIGIBILITY</button>
+            </div>
+        </div>
+
+        <div id="stage-availability" class="stage-container" style="display: none;">
+            <div class="status-icon" id="status-icon"></div>
+            <h2 id="availability-title"></h2>
+            <p id="availability-message" class="message-text"></p>
+            
+            <div class="button-group">
+                <button id="claim-button" class="primary-btn"></button> 
+                <button onclick="resetFlow()" class="secondary-btn">TRY DIFFERENT HANDLE</button>
+            </div>
+        </div>
+
+        <div id="stage-card-display" class="stage-container" style="display: none;">
+            
+            <div class="card-wrapper">
+                <div id="prover-card" class="card-frame">
+                    <header class="card-header">
+                        <span class="card-type">ZK PROVER ID</span>
+                        <span class="miden-icon">M</span>
+                    </header>
+
+                    <div class="card-art">
+                        <img id="card-pfp" src="" alt="Profile Picture" class="pfp-placeholder">
+                    </div>
+
+                    <div class="card-body">
+                        <h1 class="contributor-handle" id="card-handle">USER</h1>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <span class="stat-label">RANK</span>
+                                <span class="stat-value" id="card-rank">#000</span>
+                            </div>
+                            <div class="stat-box">
+                                <span class="stat-label">MINDSHARE</span>
+                                <span class="stat-value" id="card-score">0</span>
+                            </div>
+                        </div>
+                        
+                        <p class="description-line" id="card-desc">Description goes here.</p>
+                    </div>
+
+                    <footer class="card-footer" id="card-footer">
+                        <span class="rarity-title" id="card-rarity">RARITY</span>
+                    </footer>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button onclick="downloadCard()" class="download-btn">DOWNLOAD CARD (PNG)</button>
+                <a id="share-link" href="#" target="_blank" class="share-btn">SHARE ON X</a>
+            </div>
+            
+            <button onclick="resetFlow()" class="text-link">START OVER</button>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
