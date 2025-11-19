@@ -177,9 +177,9 @@ function checkAvailability() {
             r: '---',
             h: input,
             s: 'N/A',
-            pfp: 'https://via.placeholder.com/400x400/000000/00FF99?text=SUPPORTER+PFP', // Generic PFP for supporter
+            pfp: 'face.png', // Generic PFP for supporter
             rarity: 'CONTROLLER',
-            title: 'Early supporter. Future legend.'
+            title: 'Did not make the cut, but you are a Future legend.'
         };
         claimBtn.onclick = function() { claimCard(newcomer); };
     }
@@ -219,7 +219,7 @@ pfpElement.style.display = 'block';
     rarityText.innerText = data.rarity + ' PROVER';
 
     // Update Share Link
-    const tweetText = `I just claimed my Miden ${data.rarity} Prover Card! My rank is #${data.r}. Get yours: @0xMiden #Miden #ZK`;
+    const tweetText = `I just claimed my Miden ${data.rarity} Prover Card! My rank is #${data.r}. Get yours: blerp.site`;
     document.getElementById('share-link').href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
 
     showStage('stage-card-display');
