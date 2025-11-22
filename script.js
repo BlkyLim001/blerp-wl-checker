@@ -1,6 +1,18 @@
-// script.js - Complete Logic for Miden Community Portal
+// script.js - Complete Logic with SUPABASE INTEGRATION
 
-// --- 1. GLOBAL STATE & METADATA ---
+// ============================================================
+// 1. SUPABASE CONFIGURATION
+// ============================================================
+const SUPABASE_URL = "https://pnmwunwtgjxjfiqnoafh.supabase.co"; 
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBubXd1bnd0Z2p4amZpcW5vYWZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM3OTY4OTcsImV4cCI6MjA3OTM3Mjg5N30.hAxDTRoAdbim7uleRvFmWLEvORk-W9T83ryoEvuyPjo"; 
+
+// Initialize Supabase client
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ============================================================
+// 2. GLOBAL STATE & METADATA
+// ============================================================
 const SUPPORTER_CARD_DATA = {
     r: '---', 
     h: 'BLERP_USER',
@@ -9,10 +21,7 @@ const SUPPORTER_CARD_DATA = {
     title: 'A true Midener now'
 };
 
-let isAuthenticated = false;
-let currentUsername = '';
-
-// --- 2. GLOBAL STAGE MANAGEMENT ---
+// --- 3. GLOBAL STAGE MANAGEMENT ---
 
 window.handlePortalStageSwitch = function(stageId) {
     document.querySelectorAll('.portal-stage').forEach(stage => {
@@ -31,11 +40,8 @@ window.handlePortalStageSwitch = function(stageId) {
         }
     });
 
-    if(stageId === 'card-generator') {
-        resetFlow();
-    } else if (stageId === 'word-game') {
-        resetGame();
-    }
+    if(stageId === 'card-generator') resetFlow();
+    if (stageId === 'word-game') resetGame();
 }
 
 window.toggleMobileMenu = function() {
@@ -54,7 +60,7 @@ function resetFlow() {
     document.getElementById('stage-input').style.display = 'block';
 }
 
-// --- 3. CARD GENERATOR LOGIC ---
+// --- 4. CARD GENERATOR LOGIC ---
 
 window.checkAvailability = function() {
     const inputRaw = document.getElementById('handle-input').value;
@@ -65,7 +71,6 @@ window.checkAvailability = function() {
         msg.innerHTML = '<span style="color: #ffaa00;">Please enter your handle before claiming.</span>';
         return;
     }
-
     const cardData = { ...SUPPORTER_CARD_DATA, h: inputHandle };
     claimCard(cardData);
 }
@@ -130,7 +135,7 @@ window.downloadCard = function() {
     }
 }
 
-// --- 4. MIDEN WORD GAME LOGIC (PRIVACY FOCUSED) ---
+// --- 5. MIDEN WORD GAME LOGIC ---
 
 const WORD_LIST = [
     { word: "PRIVACY", hint: "The right to keep your data secret." },
@@ -175,49 +180,32 @@ function updateGameDisplay(scrambled, hint, message, score = currentScore, time 
     document.getElementById('scrambled-word').innerText = scrambled;
     document.getElementById('game-word-hint').innerText = `Hint: ${hint}`;
     document.getElementById('game-message').innerText = message;
-    
-    const scoreEl = document.getElementById('score-display');
-    if (scoreEl) scoreEl.querySelector('b').innerText = score;
-    
-    const timerEl = document.getElementById('timer-display');
-    if (timerEl) timerEl.querySelector('b').innerText = `${time}s`;
+    document.getElementById('score-display').querySelector('b').innerText = score;
+    document.getElementById('timer-display').querySelector('b').innerText = `${time}s`;
 }
 
 window.resetGame = function() {
     clearInterval(timer);
     currentScore = 0;
     currentWord = '';
-    
     const guessInput = document.getElementById('word-guess-input');
     if (guessInput) {
         guessInput.value = '';
         guessInput.disabled = true;
     }
-    
-    const startGameBtn = document.getElementById('start-game-btn');
-    if (startGameBtn) {
-        startGameBtn.style.display = 'block';
-        startGameBtn.innerText = 'START GAME';
-    }
-    
-    const nextWordBtn = document.getElementById('next-word-btn');
-    if (nextWordBtn) nextWordBtn.style.display = 'none';
-    
+    document.getElementById('start-game-btn').style.display = 'block';
+    document.getElementById('next-word-btn').style.display = 'none';
     updateGameDisplay("P R I V A C Y", "Let's test your ZK knowledge!", "Click START GAME to begin!", 0, TIME_LIMIT);
-    
-    const messageEl = document.getElementById('game-message');
-    if (messageEl) messageEl.classList.remove('message-success', 'message-error');
+    document.getElementById('game-message').classList.remove('message-success', 'message-error');
 }
 
 window.startTimer = function() {
     let timeLeft = TIME_LIMIT;
     const timerDisplay = document.getElementById('timer-display').querySelector('b');
     if (timerDisplay) timerDisplay.innerText = `${timeLeft}s`;
-    
     timer = setInterval(() => {
         timeLeft--;
         if (timerDisplay) timerDisplay.innerText = `${timeLeft}s`;
-
         if (timeLeft <= 0) {
             clearInterval(timer);
             endGame();
@@ -228,15 +216,12 @@ window.startTimer = function() {
 window.nextWord = function() {
     clearInterval(timer);
     startTimer();
-    
     document.getElementById('word-guess-input').value = '';
     document.getElementById('word-guess-input').disabled = false;
     document.getElementById('next-word-btn').style.display = 'none';
     document.getElementById('game-message').classList.remove('message-success', 'message-error');
-
     const newWordObj = WORD_LIST[Math.floor(Math.random() * WORD_LIST.length)];
     currentWord = newWordObj.word.toUpperCase();
-    
     const scrambled = shuffleWord(currentWord);
     updateGameDisplay(scrambled, newWordObj.hint, 'Time is ticking! Guess the word.');
 }
@@ -253,19 +238,16 @@ window.checkGuess = function() {
     const guessInput = document.getElementById('word-guess-input');
     const guess = guessInput.value.trim().toUpperCase();
     const messageEl = document.getElementById('game-message');
-
     if (!guess) {
         messageEl.innerText = "Please enter a word.";
         messageEl.classList.remove('message-success');
         messageEl.classList.add('message-error');
         return;
     }
-
     if (guess === currentWord) {
         currentScore += CORRECT_SCORE; 
         clearInterval(timer); 
         updateGameDisplay(currentWord.split('').join(' '), `Correct! The word was ${currentWord}.`, `PROOF ACCEPTED! (+${CORRECT_SCORE})`, currentScore, TIME_LIMIT);
-        
         guessInput.disabled = true;
         document.getElementById('next-word-btn').style.display = 'block';
         messageEl.classList.remove('message-error');
@@ -274,7 +256,6 @@ window.checkGuess = function() {
         currentScore = Math.max(0, currentScore - WRONG_PENALTY); 
         const currentTimeText = document.getElementById('timer-display').querySelector('b').innerText;
         const currentTime = parseInt(currentTimeText.replace('s', '')) || 0; 
-        
         updateGameDisplay(document.getElementById('scrambled-word').innerText, document.getElementById('game-word-hint').innerText, `PROOF REJECTED. Try again. (-${WRONG_PENALTY})`, currentScore, currentTime);
         messageEl.classList.remove('message-success');
         messageEl.classList.add('message-error');
@@ -284,41 +265,42 @@ window.checkGuess = function() {
 function endGame() {
     document.getElementById('word-guess-input').disabled = true;
     document.getElementById('next-word-btn').style.display = 'none';
-    
-    const startGameBtn = document.getElementById('start-game-btn');
-    if (startGameBtn) {
-        startGameBtn.innerText = 'PLAY AGAIN';
-        startGameBtn.style.display = 'block';
-    }
-    
+    document.getElementById('start-game-btn').innerText = 'PLAY AGAIN';
+    document.getElementById('start-game-btn').style.display = 'block';
     updateGameDisplay("GAME OVER", "Your knowledge has been tested.", `Final Score: ${currentScore}. Click PLAY AGAIN!`, currentScore, 0);
     alert(`Game Over! Your Final Score is: ${currentScore}`);
 }
 
-// --- 5. CONFESSIONS LOGIC (UPDATED TIME FORMATTING) ---
+// ============================================================
+// 6. CONFESSIONS LOGIC (SUPABASE DATABASE)
+// ============================================================
 
-// Helper to format time: "5m ago" or "10:30 AM"
-function formatConfessionTime(dateObj) {
+// --- A. Real-time Time Formatter ---
+function getLiveTimeAgo(dateString) {
+    // Handle Supabase timestamp format
+    const dateObj = new Date(dateString);
+    if (isNaN(dateObj.getTime())) return "Just now";
+
     const now = new Date();
     const diffMs = now - dateObj;
-    const diffMins = Math.floor(diffMs / 60000); // Minutes difference
+    const diffSeconds = Math.floor(diffMs / 1000);
 
-    if (diffMins < 60) {
-        return `${diffMins}m ago`;
-    } else {
-        // Format as exact hour/time (e.g. 4:30 PM)
+    if (diffSeconds < 60) {
+        return `${Math.max(0, diffSeconds)}s ago`;
+    }
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    if (diffMinutes < 60) {
+        return `${diffMinutes}m ago`;
+    }
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) {
         return dateObj.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
     }
+    return dateObj.toLocaleDateString(); 
 }
 
-window.updateCharCount = function() {
-    const textarea = document.getElementById('confession-text');
-    const maxLength = textarea.maxLength || 200;
-    const remaining = maxLength - textarea.value.length;
-    document.getElementById('char-count').innerText = `${remaining} characters remaining`;
-}
-
-window.submitConfession = function() {
+// --- B. Submit to Supabase ---
+window.submitConfession = async function() {
     const textarea = document.getElementById('confession-text');
     const confessionText = textarea.value.trim();
     
@@ -328,48 +310,81 @@ window.submitConfession = function() {
     }
     
     const randomId = Math.floor(Math.random() * 1000) + 100;
-    
-    // CAPTURE CURRENT TIME
-    const now = new Date();
-    // Initial time string (0m ago)
-    const timeString = formatConfessionTime(now);
 
-    const newConfessionHTML = `
-        <div class="confession-entry" data-timestamp="${now.toISOString()}">
-            <span class="confession-text">${confessionText}</span>
-            <span class="confession-timestamp">— Anonymized Prover #${randomId} (<span class="time-display">${timeString}</span>)</span>
-        </div>
-    `;
+    // INSERT into 'confessions' table
+    const { data, error } = await sb
+        .from('confessions')
+        .insert([{ text: confessionText, prover_id: randomId }])
+        .select();
 
-    const feed = document.getElementById('confession-feed');
-    feed.insertAdjacentHTML('afterbegin', newConfessionHTML);
-
-    textarea.value = '';
-    updateCharCount();
-    feed.scrollTop = 0; 
+    if (error) {
+        console.error("Error saving:", error);
+        alert("Error saving confession. Check console.");
+    } else {
+        console.log("Confession saved:", data);
+        textarea.value = '';
+        window.updateCharCount();
+        loadConfessions(); // Refresh list immediately
+    }
 }
 
-// Function to update timestamps periodically
-function updateConfessionTimes() {
-    const entries = document.querySelectorAll('.confession-entry');
-    entries.forEach(entry => {
-        const timestampStr = entry.getAttribute('data-timestamp');
-        if (timestampStr) {
-            const dateObj = new Date(timestampStr);
-            const newTimeString = formatConfessionTime(dateObj);
-            // Find the span where the time is displayed and update it
-            const timeSpan = entry.querySelector('.time-display');
-            if (timeSpan) {
-                timeSpan.innerText = newTimeString;
-            }
-        }
+// --- C. Load Confessions (Persistent) ---
+async function loadConfessions() {
+    const feed = document.getElementById('confession-feed');
+    
+    // SELECT * FROM confessions ORDER BY created_at DESC LIMIT 50
+    const { data, error } = await sb
+        .from('confessions')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+    if (error) {
+        console.error("Error loading:", error);
+        return;
+    }
+
+    // Clear and rebuild feed
+    feed.innerHTML = ''; 
+    
+    data.forEach((item) => {
+        const timeString = getLiveTimeAgo(item.created_at);
+        
+        const entryHTML = `
+            <div class="confession-entry" data-time="${item.created_at}">
+                <span class="confession-text">${item.text}</span>
+                <span class="confession-timestamp">— Anonymized Prover #${item.prover_id} (<span class="live-time">${timeString}</span>)</span>
+            </div>
+        `;
+        feed.insertAdjacentHTML('beforeend', entryHTML);
     });
 }
 
+// --- D. Update Times Every Second ---
+function startLiveTimeUpdates() {
+    setInterval(() => {
+        const entries = document.querySelectorAll('.confession-entry');
+        entries.forEach((entry) => {
+            const dateString = entry.getAttribute('data-time');
+            if (dateString) {
+                const newTime = getLiveTimeAgo(dateString);
+                const span = entry.querySelector('.live-time');
+                if (span) span.innerText = newTime;
+            }
+        });
+    }, 1000); 
+}
 
-// --- 6. INITIALIZATION ---
+window.updateCharCount = function() {
+    const textarea = document.getElementById('confession-text');
+    const maxLength = textarea.maxLength || 200;
+    const remaining = maxLength - textarea.value.length;
+    document.getElementById('char-count').innerText = `${remaining} characters remaining`;
+}
+
+// --- 7. INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
-    // Stage switching for all navigation links
+    // Navigation
     document.querySelectorAll('#main-nav .nav-links a, #mobile-nav-drawer a').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -383,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // PFP Upload Handler
+    // PFP Upload
     const pfpInput = document.getElementById('pfp-input');
     const userPfpImage = document.getElementById('user-pfp');
     const pfpLabel = document.getElementById('pfp-label');
@@ -412,17 +427,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Confession character counter
+    // Confession Setup
     const confessionTextarea = document.getElementById('confession-text');
     if (confessionTextarea) {
         confessionTextarea.setAttribute('maxlength', '200');
         updateCharCount(); 
         confessionTextarea.addEventListener('input', updateCharCount);
         
-        // Start the interval to update timestamp text every 60 seconds
-        setInterval(updateConfessionTimes, 60000);
+        // Initial Load & Auto-Refresh Polling (every 10s)
+        loadConfessions();
+        setInterval(loadConfessions, 10000); 
+        startLiveTimeUpdates();
     }
 
-    // Initial stage setup
+    // Initial Stage
     handlePortalStageSwitch('card-generator');
 });
