@@ -3,86 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miden ZK Prover Card | Kaito Leaderboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>BLERP.SITE | Miden Community Portal</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="favicon.png.ico">
+    <link rel="icon" href="favicon.png.ico" type="x-image/icon"
+    
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <meta property="og:title" content="BLERP.SITE | Miden Community Portal & Tools">
+    <meta property="og:description" content="The central hub for Miden community tools: Prover Card Generator, ZK Games, Dashboard, and more.">
+    <meta property="og:url" content="https://blerp.site">
+    <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 
-    <div id="app-container">
+    <nav id="main-nav">
+        <div class="logo">BLERP.SITE</div>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()">&#9776;</button> 
         
-        <div id="stage-input" class="stage-container">
-            <div class="logo-area">
-                <span class="miden-logo">M</span>
-            </div>
-            <h1>MIDEN CARD CLAIM</h1>
-            <p class="subtitle">Enter your X handle to claim your card.</p>
-            
-            <div class="input-group">
-                <input type="text" id="handle-input" placeholder="YourHandle" maxlength="20">
-                <button onclick="checkAvailability()" class="primary-btn">CHECK ELIGIBILITY</button>
-            </div>
+        <div class="nav-links">
+            <a href="#" data-stage="card-generator" class="active">Card Generator</a>
+            <a href="#" data-stage="word-game">Miden Word Game</a> 
+            <a href="#" data-stage="dashboard">Metrics Dashboard</a>
+            <a href="#" data-stage="ecosystem-hub">Ecosystem Hub</a>
+            <a href="#" data-stage="confessions">Confessions</a>
         </div>
+    </nav>
+    
+    <div id="mobile-nav-drawer">
+        <a href="#" data-stage="card-generator" onclick="handlePortalStageSwitch('card-generator'); toggleMobileMenu()">Card Generator</a>
+        <a href="#" data-stage="word-game" onclick="handlePortalStageSwitch('word-game'); toggleMobileMenu()">Miden Word Game</a> 
+        <a href="#" data-stage="dashboard" onclick="handlePortalStageSwitch('dashboard'); toggleMobileMenu()">Metrics Dashboard</a>
+        <a href="#" data-stage="ecosystem-hub" onclick="handlePortalStageSwitch('ecosystem-hub'); toggleMobileMenu()">Ecosystem Hub</a>
+        <a href="#" data-stage="confessions" onclick="handlePortalStageSwitch('confessions'); toggleMobileMenu()">Confessions</a>
+    </div>
+    
+    <div id="main-content-wrapper"> 
 
-        <div id="stage-availability" class="stage-container" style="display: none;">
-            <div class="status-icon" id="status-icon"></div>
-            <h2 id="availability-title"></h2>
-            <p id="availability-message" class="message-text"></p>
+        <div id="app-container">
             
-            <div class="button-group">
-                <button id="claim-button" class="primary-btn"></button> 
-                <button onclick="resetFlow()" class="secondary-btn">TRY DIFFERENT HANDLE</button>
-            </div>
-        </div>
+            <div id="stage-card-generator" class="portal-stage active-stage">
+                <div class="card-title">
+                    <h1>Miden ZK Prover ID</h1>
+                    <p>Enter your handle and upload your PFP to claim and generate your card.</p>
+                </div>
 
-        <div id="stage-card-display" class="stage-container" style="display: none;">
-            
-            <div class="card-wrapper">
-                <div id="prover-card" class="card-frame">
-                    <header class="card-header">
-                        <span class="card-type">ZK PROVER ID</span>
-                        <span class="miden-icon">M</span>
-                    </header>
-
-                    <div class="card-art">
-                        <img id="card-pfp" src="" alt="Profile Picture" class="pfp-placeholder">
+                <div id="stage-input" class="stage-container" style="display: block;">
+                    <div class="input-form image-upload-group">
+                        <input type="file" id="pfp-input" accept="image/png, image/jpeg" style="display: none;">
+                        <label for="pfp-input" id="pfp-label" class="custom-file-button">
+                            Click to Upload PFP (PNG/JPG)
+                        </label>
+                        <p id="pfp-status">No file selected.</p>
                     </div>
+                    
+                    <div class="input-form">
+                        <input type="text" id="handle-input" placeholder="YourHandle" maxlength="20">
+                        <button id="claim-button" onclick="checkAvailability()">Check & Claim</button>
+                    </div>
+                    <p id="message-area" class="message-area"></p>
+                </div>
 
-                    <div class="card-body">
-                        <h1 class="contributor-handle" id="card-handle">USER</h1>
-                        
-                        <div class="stats-grid">
-                            <div class="stat-box">
-                                <span class="stat-label">RANK</span>
-                                <span class="stat-value" id="card-rank">#000</span>
-                            </div>
-                            <div class="stat-box">
-                                <span class="stat-label">MINDSHARE</span>
-                                <span class="stat-value" id="card-score">0</span>
+                <div id="stage-availability" class="stage-container" style="display: none;">
+                    <div class="status-box">
+                        <span id="status-icon"></span>
+                        <h2 id="availability-title"></h2>
+                        <p id="availability-message"></p>
+                        <button id="claim-button" class="primary-btn" onclick="claimCard()">CLAIM CARD</button>
+                        <button class="share-btn" onclick="resetFlow()">TRY ANOTHER HANDLE</button>
+                    </div>
+                </div>
+
+                <div id="stage-card-display" class="stage-container" style="display: none;">
+                    
+                    <div id="prover-card" class="card-frame">
+                        <div class="card-header">
+                            <span class="miden-icon">MIDEN</span>
+                            <span id="card-rank">NAN</span>
+                        </div>
+
+                        <div class="card-art">
+                            <img id="user-pfp" src="" alt="User Profile Picture" /> 
+                        </div>
+
+                        <div class="card-body">
+                            <h2 id="card-handle" class="contributor-handle">@BLERP_USER</h2>
+                            
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <div class="stat-label">ZK SCORE</div>
+                                    <div id="card-score">N/A</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-label">CLASSIFICATION</div>
+                                    <div id="card-desc">Future Legend</div>
+                                </div>
                             </div>
                         </div>
-                        
-                        <p class="description-line" id="card-desc">Description goes here.</p>
+
+                        <div id="card-footer" class="card-footer rarity-VERIFIED">
+                            <span id="card-rarity" class="rarity-title">VERIFIED PROVER</span>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button class="download-btn primary-btn" onclick="downloadCard()">DOWNLOAD CARD (PNG)</button>
+                        <a id="share-link" class="share-btn" target="_blank">SHARE ON X</a>
+                        <button class="share-btn" onclick="resetFlow()">GO BACK</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stage-word-game" class="portal-stage">
+                <div class="stage-container">
+                    <div class="header-section">
+                        <h2 class="section-title">Miden Word Scramble</h2>
+                        <p class="section-subtitle">Unscramble the ZK-related term before the timer runs out!</p>
+                        <hr class="neon-line">
                     </div>
 
-                    <footer class="card-footer" id="card-footer">
-                        <span class="rarity-title" id="card-rarity">RARITY</span>
-                    </footer>
+                    <div class="game-wrapper">
+                        <div id="game-status-bar">
+                            <span id="timer-display">Time: <b>20s</b></span>
+                            <span id="score-display">Score: <b>0</b></span>
+                        </div>
+
+                        <div class="game-card">
+                            <p id="game-word-hint" class="game-hint">Hint: Let's test your ZK knowledge!</p>
+                            <h1 id="scrambled-word" class="scrambled-text">M I D E N</h1>
+                            <p id="game-message" class="game-message">Click START GAME to begin!</p>
+                        </div>
+
+                        <div class="input-form game-input-form">
+                            <input type="text" id="word-guess-input" placeholder="Your Answer" maxlength="15" disabled>
+                            <button onclick="checkGuess()">SUBMIT</button>
+                        </div>
+
+                        <button id="start-game-btn" class="primary-btn" onclick="checkAuthAndStart()">START GAME</button>
+                        <button id="next-word-btn" class="share-btn" style="display:none;" onclick="nextWord()">NEXT WORD</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="stage-dashboard" class="portal-stage">
+                <div class="stage-container">
+                    <div class="header-section">
+                        <h2 class="section-title">Miden Metrics Dashboard</h2>
+                        <p class="section-subtitle">Real-time stats and key performance indicators for the Miden ecosystem.</p>
+                        <hr class="neon-line">
+                    </div>
+
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <p class="metric-label">NEW X FOLLOWERS</p>
+                            <h3 class="metric-value" id="metric-provers">5,200+</h3>
+                            <p class="metric-trend green">▲ +33% (30D)</p>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <p class="metric-label">KAITO MINDSHARE</p>
+                            <h3 class="metric-value" id="metric-proofs">2000+ YAPPERS</h3>
+                            <p class="metric-trend green">▲ +20.5% (7D)</p>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <p class="metric-label">TELEGRAM MEMBERS (Aggregate)</p>
+                            <h3 class="metric-value" id="metric-score">300+</h3>
+                            <p class="metric-trend green">▲ +10.5% (30D)</p>
+                        </div>
+
+                        <div class="metric-card">
+                            <p class="metric-label">TOTAL ECOSYSTEM ACTIVITY TREND</p>
+                            <h3 class="metric-value" id="metric-proofs">10000+ cumulative</h3>
+                            <p class="metric-trend green">▲ +64% (30D)</p>
+                        </div>
+                    </div>
+                    
+                    <p class="metrics-note">Note:some of these data takes time to update.</p>
                 </div>
             </div>
 
-            <div class="action-buttons">
-                <button onclick="downloadCard()" class="download-btn">DOWNLOAD CARD (PNG)</button>
-                <a id="share-link" href="#" target="_blank" class="share-btn">SHARE ON X</a>
+            <div id="stage-ecosystem-hub" class="portal-stage">
+                <div class="stage-container">
+                    <div class="header-section">
+                        <h2 class="section-title">Miden Ecosystem Hub</h2>
+                        <p class="section-subtitle">A curated collection of core documentation, community tools, and projects.</p>
+                        <hr class="neon-line">
+                    </div>
+
+                    <div class="resource-grid">
+                        <a href="https://docs.miden.xyz/" target="_blank" class="resource-card">
+                            <div class="card-icon">📚</div>
+                            <h3 class="card-title">Official Documentation</h3>
+                            <p class="card-desc">The ultimate resource for Miden principles and specifications.</p>
+                        </a>
+                        
+                        <a href="https://github.com/0xMiden" target="_blank" class="resource-card">
+                            <div class="card-icon">💻</div>
+                            <h3 class="card-title">Miden GitHub Repository</h3>
+                            <p class="card-desc">Explore the source code, contribute, and view issues.</p>
+                        </a>
+                        
+                        <a href="https://x.com/0xMiden?t=-MK64c7kdJCtTcO3DbYjcw&s=09" target="_blank" class="resource-card">
+                            <div class="card-icon">🌐</div>
+                            <h3 class="card-title">Miden X (Twitter)</h3>
+                            <p class="card-desc">Follow announcements and real-time project updates.</p>
+                        </a>
+                        
+                        <a href="https://faucet.testnet.miden.io/" target="_blank" class="resource-card">
+                            <div class="card-icon">🗺️</div>
+                            <h3 class="card-title">Miden Faucet</h3>
+                            <p class="card-desc">Claim some test tokens to begin interacting</p>
+                        </a>
+                    </div>
+                </div>
             </div>
-            
-            <button onclick="resetFlow()" class="text-link">START OVER</button>
-        </div>
 
+            <div id="stage-confessions" class="portal-stage">
+                <div class="stage-container">
+                    <div class="header-section">
+                        <h2 class="section-title">Miden Anonymous Confessions</h2>
+                        <p class="section-subtitle">ZK-Rollups got you down? Spill the secrets of your proving life. All submissions are randomized and anonymous.</p>
+                        <hr class="neon-line">
+                    </div>
+
+                    <div class="confession-input-box">
+                        <textarea id="confession-text" placeholder="I secretly think the ZK-EVM is a..." maxlength="200"></textarea>
+                        <p id="char-count">200 characters remaining</p>
+                        <button class="primary-btn" onclick="submitConfession()">SUBMIT CONFESSION</button>
+                    </div>
+
+                    <div class="confession-feed-container">
+                        <h3 class="feed-title">The Prover Whisper Network</h3>
+                        <div id="confession-feed">
+                            <div class="confession-entry">
+                                <span class="confession-text">I've been staring at the whitepaper for two hours and still don't understand AIR.</span>
+                                <span class="confession-timestamp">— Anonymized Prover #329 (2m ago)</span>
+                            </div>
+                            <div class="confession-entry">
+                                <span class="confession-text">The orange color scheme is actually kind of unsettling after midnight.</span>
+                                <span class="confession-timestamp">— Anonymized Prover #187 (5m ago)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            </div>
+        
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

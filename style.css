@@ -1,10 +1,11 @@
-/* style.css - Cleaned, working Miden theme */
+/* style.css - Complete Fix: Card Alignment & Mobile Nav */
 
 :root {
     --bg-dark: #050505;
     --bg-card: #0a0a0a;
     --neon-orange: #FF5E00; 
     --neon-blue: #00f3ff;
+    --neon-green: #00ffaa;
     --text-main: #ffffff;
     --text-dim: #888888;
     --font-header: 'Orbitron', sans-serif;
@@ -20,226 +21,307 @@ body {
     font-family: var(--font-mono);
     
     display: flex;
-    justify-content: center; /* Centers items horizontally */
-    align-items: center;    /* <-- CRITICAL FIX: Centers items vertically */
+    justify-content: center; 
+    align-items: flex-start;
     
     min-height: 100vh;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     width: 100%;
+    overflow-x: hidden; 
+}
+
+/* --- PORTAL FRAMEWORK & NAVIGATION --- */
+
+#main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    border-bottom: 2px solid var(--neon-orange);
+}
+
+#main-nav .logo {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: var(--neon-orange);
+    text-shadow: 0 0 5px rgba(255, 94, 0, 0.5);
+}
+
+/* Desktop Nav Links */
+.nav-links {
+    display: flex; 
+}
+
+.nav-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    margin-left: 15px;
+    padding: 8px 10px;
+    transition: color 0.3s, background-color 0.3s;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+.nav-links a:hover {
+    color: var(--neon-orange);
+    background-color: rgba(255, 94, 0, 0.1);
+}
+
+.nav-links a.active {
+    color: #fff;
+    background-color: var(--neon-orange);
+    box-shadow: 0 0 10px rgba(255, 94, 0, 0.7);
+}
+
+/* Mobile Menu Button - Hidden on Desktop */
+#mobile-menu-btn {
+    display: none; 
+    background: none;
+    border: none;
+    color: var(--neon-orange);
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+/* Mobile Navigation Drawer */
+#mobile-nav-drawer {
+    position: fixed;
+    top: 50px; 
+    right: 0;
+    width: 250px;
+    height: calc(100vh - 50px);
+    background-color: rgba(5, 5, 5, 0.98);
+    backdrop-filter: blur(8px);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 10px;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    
+    /* HIDDEN ON DESKTOP BY DEFAULT */
+    display: none; 
+    
+    /* Animation Logic */
+    transform: translateX(100%); 
+    transition: transform 0.3s ease-out;
+}
+
+#mobile-nav-drawer.open {
+    transform: translateX(0); 
+}
+
+#mobile-nav-drawer a {
+    width: 100%;
+    padding: 15px 10px;
+    margin: 5px 0;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255, 94, 0, 0.2);
+    color: #fff;
+    text-decoration: none;
+}
+
+/* --- MAIN LAYOUT --- */
+
+#main-content-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px; 
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 0; 
 }
 
 #app-container {
     width: 100%;
-    max-width: 450px;
-    margin: 0 auto; /* Ensures centering within the body's flow */
-    text-align: center;
+    max-width: 800px; 
+    margin: 0 auto; 
+    padding-top: 50px; 
 }
 
-/* --- STAGE MANAGEMENT --- */
-.stage-container {
-    animation: fadeIn 0.5s ease-in-out;
-}
+/* --- GENERAL STAGE MANAGEMENT & TYPOGRAPHY --- */
+.stage-container { animation: fadeIn 0.5s ease-in-out; }
+.portal-stage { display: none; padding: 40px 20px; text-align: center; opacity: 0; transition: opacity 0.5s ease-in-out; }
+.portal-stage.active-stage { display: block; opacity: 1; }
+.portal-stage h2 { color: var(--neon-orange); margin-bottom: 20px; text-shadow: 0 0 5px rgba(255, 94, 0, 0.3); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+h1 { font-family: var(--font-header); font-size: 1.8rem; margin-bottom: 10px; letter-spacing: 2px; text-transform: uppercase; }
+.subtitle { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 30px; }
 
-/* --- TYPOGRAPHY & INPUTS --- */
-h1 {
-    font-family: var(--font-header);
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-}
+/* --- INPUT FORM STYLING --- */
+.input-form { display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px; }
 
-.subtitle {
-    color: var(--text-dim);
-    font-size: 0.9rem;
-    margin-bottom: 30px;
-}
-
-.logo-area .miden-logo {
-    font-family: var(--font-header);
-    font-size: 3rem;
-    font-weight: 900;
-    color: var(--neon-orange);
-    text-shadow: 0 0 15px var(--neon-orange);
-    display: block;
-    margin-bottom: 20px;
-}
-
-.input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-input {
-    width: 100%;
-    padding: 15px;
+.image-upload-group {
     background: #000;
     border: 1px solid #333;
     border-radius: 4px;
-    color: var(--neon-orange);
-    font-family: var(--font-mono);
-    font-size: 1.1rem;
-    text-align: center;
-    outline: none;
-    transition: 0.3s;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; 
+    width: 100%;
+    margin-bottom: 20px;
 }
 
-/* --- BUTTONS & ACTIONS --- */
-.primary-btn, .download-btn {
-    width: 100%;
-    padding: 15px;
+.custom-file-button {
+    padding: 10px 20px;
     background: var(--neon-orange);
     color: #000;
     font-family: var(--font-header);
     font-weight: 700;
-    border: none;
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 1px;
-    /* Cleaned clip-path for button shape */
+    border-radius: 4px;
+    transition: background 0.2s, transform 0.1s;
+    display: block;
+    width: 90%;
+    text-align: center;
+}
+.custom-file-button:hover { background-color: #e65500; transform: scale(1.02); }
+
+#pfp-status { font-size: 0.9rem; color: var(--text-dim); margin-top: 5px; }
+
+input { width: 100%; padding: 15px; background: #000; border: 1px solid #333; border-radius: 4px; color: var(--neon-orange); font-family: var(--font-mono); font-size: 1.1rem; text-align: center; outline: none; transition: 0.3s; }
+
+/* --- BUTTONS --- */
+.primary-btn, .download-btn {
+    width: 100%; padding: 15px; background: var(--neon-orange); color: #000; font-family: var(--font-header); font-weight: 700; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;
     -webkit-clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
     clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.action-buttons {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
+.action-buttons { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
 .share-btn {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background: #000;
-    border: 1px solid var(--text-main);
-    color: var(--text-main);
-    font-family: var(--font-header);
-    font-weight: 700;
-    text-decoration: none;
-    text-transform: uppercase;
-    text-align: center;
+    display: block; width: 100%; padding: 15px; background: #000; border: 1px solid var(--text-main); color: var(--text-main); font-family: var(--font-header); font-weight: 700; text-decoration: none; text-transform: uppercase; text-align: center;
     -webkit-clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
     clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
 }
 
-/* --- THE CARD (CORE LAYOUT FIX) --- */
-.card-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
+/* --- CARD GENERATOR STYLES (FIXED & OPTIMIZED) --- */
 .card-frame {
     width: 320px;
     height: 500px;
-    background: var(--bg-card);
-    border: 2px solid #333;
-    /* CRITICAL FIX: Base for absolute footer */
-    position: relative; 
+    background: #0a0a0a;
+    border: 2px solid #222;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 25px 20px;
     box-shadow: 0 0 30px rgba(0,0,0,0.8);
-    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 20px 20px;
+    margin: 0 auto; 
 }
 
 .card-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #333;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 15px; /* Reduced slightly to save vertical space */
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .miden-icon {
-    font-weight: 900;
-    color: var(--text-main);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: #fff;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#card-rank {
+    font-family: var(--font-mono);
+    color: #fff;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
 }
 
 .card-art {
-    width: 100%;
+    width: 180px;
     height: 180px;
     background: #000;
-    border: 1px solid #333;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     position: relative;
     overflow: hidden;
-    /* Removed flex centering for the PFP image, as we want it to fill */
 }
 
-/* Profile Picture Styling */
-.pfp-placeholder {
-    width: 100%; 
-    height: 100%;
-    border-radius: 4px;
-    object-fit: cover;
-    border: 3px solid var(--neon-orange);
-    box-shadow: 0 0 15px rgba(255, 94, 0, 0.5);
-    background-color: #222;
-    animation: pulseBorder 2s infinite alternate;
+#user-pfp {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; border: 4px solid #FF5E00; box-sizing: border-box;
 }
 
-@keyframes pulseBorder {
-    from { box-shadow: 0 0 5px rgba(255, 94, 0, 0.3); }
-    to { box-shadow: 0 0 20px rgba(255, 94, 0, 0.8); }
-}
-
-.card-body {
-    width: 100%;
-    text-align: left;
-    flex-grow: 1; /* Allows body to push footer down */
-}
+.card-body { width: 100%; text-align: center; flex-grow: 1; }
 
 .contributor-handle {
     font-family: var(--font-header);
-    font-size: 1.4rem;
-    color: #fff;
-    margin: 0 0 15px 0;
-    text-shadow: 0 0 5px rgba(255,255,255,0.5);
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: #FF5E00;
+    margin: 5px 0 15px 0; /* tighter margins */
+    text-align: left;
+    padding-left: 5px;
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
+    gap: 15px;
+    width: 100%;
 }
 
 .stat-box {
-    background: #111;
-    border: 1px solid #333;
-    padding: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px 5px; /* slightly reduced padding */
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 65px; /* ensure consistency */
 }
 
 .stat-label {
-    font-size: 0.6rem;
-    color: var(--text-dim);
+    font-size: 0.65rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
 }
 
-/* Card Footer (Absolute Positioning) */
+#card-score, #card-desc {
+    font-family: var(--font-mono);
+    color: #fff;
+    font-size: 1.0rem; /* slightly smaller font to prevent overflow */
+    font-weight: 400;
+    line-height: 1.2;
+}
+
 .card-footer {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: 12px;
+    padding: 20px;
     text-align: center;
-    background: linear-gradient(90deg, transparent, rgba(255, 94, 0, 0.2), transparent);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent); 
 }
 
 .rarity-title {
@@ -247,25 +329,117 @@ input {
     font-weight: 900;
     letter-spacing: 2px;
     text-transform: uppercase;
+    font-size: 1.4rem;
 }
 
-/* RARITY COLORS */
-.rarity-MYTHIC { color: #FFD700; text-shadow: 0 0 10px #FFD700; border-color: #FFD700; }
-.rarity-ELITE { color: var(--neon-orange); text-shadow: 0 0 10px var(--neon-orange); border-color: var(--neon-orange); }
-.rarity-PRIME { color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); border-color: var(--neon-blue); }
-/* --- NEW RARITY TIERS (51-100) --- */
-.rarity-MASTER { color: #f0f8ff; text-shadow: 0 0 10px #f0f8ff; border-color: #f0f8ff; }         /* ALICE BLUE */
-.rarity-EXPERT { color: #FFD700; text-shadow: 0 0 10px #FFD700; border-color: #FFD700; }         /* Use Gold for emphasis */
-.rarity-VETERAN { color: #008080; text-shadow: 0 0 10px #008080; border-color: #008080; }       /* TEAL */
-.rarity-JOURNEYMAN { color: #FFA500; text-shadow: 0 0 10px #FFA500; border-color: #FFA500; }    /* ORANGE */
-.rarity-JOURNEYMAN { color: #008080; text-shadow: 0 0 10px #008080; border-color: #008080; }    /* TEAL */
-/* --------------------------------- */
-.rarity-CONTROLLER { color: #fff; border-color: #fff; }
+.rarity-VERIFIED { color: #00ffaa; text-shadow: 0 0 15px rgba(0, 255, 170, 0.6); }
 
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 600px) {
-    .card-frame {
-        width: 100%; 
-        max-width: 300px; 
+/* --- WORD GAME STYLES --- */
+.game-wrapper {
+    margin: 30px auto; padding: 30px; max-width: 700px; background-color: rgba(0, 0, 0, 0.5); border: 2px solid var(--neon-blue); border-radius: 12px; box-shadow: 0 0 25px rgba(0, 255, 255, 0.3); text-align: center;
+}
+#game-status-bar {
+    display: flex; justify-content: space-between; padding: 10px 0; margin-bottom: 20px; font-size: 1.1em; color: var(--text-main); border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+}
+#game-status-bar b { color: var(--neon-orange); }
+.game-card {
+    background-color: rgba(0, 255, 255, 0.05); border: 1px solid var(--neon-blue); border-radius: 8px; padding: 25px; margin-bottom: 20px;
+}
+.scrambled-text {
+    font-size: 3em; letter-spacing: 0.5em; color: var(--neon-orange); text-shadow: 0 0 15px rgba(255, 170, 0, 0.7); margin: 10px 0 20px 0; font-family: monospace; user-select: none;
+}
+.game-input-form { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.game-input-form input { flex-grow: 1; max-width: 250px; text-align: center; font-size: 1.2em; text-transform: uppercase; }
+.message-success { color: var(--neon-green) !important; }
+.message-error { color: #ff5555 !important; }
+
+/* --- DASHBOARD STYLES --- */
+.metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px; max-width: 700px; margin-left: auto; margin-right: auto; }
+.metric-card {
+    background-color: rgba(0, 0, 0, 0.7); border: 1px solid var(--neon-blue); padding: 15px; border-radius: 8px; text-align: left; box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+}
+.metric-card.large-card { grid-column: 1 / -1; height: 120px; display: flex; flex-direction: column; }
+.metric-label { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+.metric-value { font-family: var(--font-header); font-size: 1.8rem; color: var(--neon-orange); text-shadow: 0 0 5px rgba(255, 94, 0, 0.5); margin: 0; }
+.metric-trend.green { color: #00ffaa; }
+.metric-trend.yellow { color: #ffd700; }
+
+/* --- ECOSYSTEM HUB STYLES --- */
+.resource-grid {
+    display: flex; flex-direction: column; gap: 15px; margin-top: 30px; max-width: 500px; margin-left: auto; margin-right: auto;
+}
+.resource-card {
+    display: flex; align-items: center; text-align: left; padding: 15px; background-color: rgba(0, 0, 0, 0.7); border: 1px solid var(--neon-orange); border-radius: 8px; text-decoration: none; color: var(--text-main); transition: all 0.3s ease; box-shadow: 0 0 10px rgba(255, 94, 0, 0.2);
+}
+.resource-card:hover {
+    background-color: rgba(255, 94, 0, 0.1); border-color: var(--neon-blue); color: var(--neon-blue); transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 243, 255, 0.4);
+}
+
+/* --- CONFESSIONS STYLES --- */
+.confession-input-box {
+    margin: 30px auto; padding: 20px; max-width: 500px; background-color: rgba(0, 0, 0, 0.6); border: 1px solid var(--neon-orange); border-radius: 8px; box-shadow: 0 0 10px rgba(255, 94, 0, 0.4); text-align: center;
+}
+#confession-text {
+    width: 100%; height: 100px; padding: 10px; background: var(--bg-card); border: 1px solid #444; border-radius: 4px; color: var(--neon-blue); font-family: var(--font-mono); font-size: 0.95rem; resize: vertical; margin-bottom: 10px;
+}
+#char-count { text-align: right; font-size: 0.75rem; color: var(--text-dim); margin: -5px 0 15px 0; }
+.confession-feed-container { margin-top: 40px; padding: 15px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.feed-title { color: var(--neon-blue); font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px dashed rgba(0, 243, 255, 0.3); padding-bottom: 5px; text-align: left; }
+#confession-feed { max-height: 350px; overflow-y: auto; padding-right: 15px; padding-left: 5px; text-align: left; }
+.confession-entry { background-color: rgba(0, 243, 255, 0.05); border-left: 3px solid var(--neon-blue); padding: 10px; margin-bottom: 10px; border-radius: 4px; display: flex; flex-direction: column; }
+.confession-text { font-size: 0.95rem; color: var(--text-main); margin-bottom: 5px; }
+.confession-timestamp { font-size: 0.7rem; color: var(--neon-orange); text-align: right; }
+
+/* --- MOBILE RESPONSIVENESS FIX (UPDATED) --- */
+@media (max-width: 850px) {
+    /* 1. Show Button, Hide Desktop Nav */
+    #mobile-menu-btn {
+        display: block; 
     }
+    .nav-links {
+        display: none !important; /* Force hide desktop nav */
+    }
+    
+    /* 2. Fix Drawer Visibility for Mobile - This was the key fix! */
+    #mobile-nav-drawer {
+        display: flex; 
+    }
+    
+    /* 3. Adjust Layout Spacing */
+    #main-content-wrapper {
+        padding: 0 10px; 
+    }
+    
+    #app-container {
+        max-width: 100%; 
+        width: 100%;
+        padding-top: 60px; 
+    }
+    
+    /* 4. FIX CARD LAYOUT OVERLAP ON MOBILE */
+    .card-frame { 
+        width: 90%; 
+        max-width: 320px; 
+        /* INCREASED HEIGHT TO PREVENT FOOTER OVERLAP */
+        height: 540px; 
+    }
+    
+    .contributor-handle {
+        font-size: 1.4rem; /* Slightly smaller font on mobile */
+        margin: 5px 0 10px 0;
+    }
+    
+    .stats-grid {
+        gap: 10px;
+    }
+    
+    /* Ensure footer has breathing room */
+    .card-footer {
+        padding: 15px;
+    }
+
+    /* 5. General Mobile Tweaks */
+    .game-wrapper { padding: 20px; }
+    .metrics-grid { grid-template-columns: 1fr; max-width: 100%; }
+    .resource-grid, .confession-input-box, .confession-feed-container { max-width: 100%; padding-left: 10px; padding-right: 10px; }
 }
